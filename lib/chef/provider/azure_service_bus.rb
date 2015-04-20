@@ -5,7 +5,7 @@ class Chef
     class AzureServiceBus < Chef::Provisioning::AzureDriver::AzureProvider
       action :create do
         Chef::Log.info("Creating AzureServiceBus: #{new_resource.name}")
-		cmd = "azure sb namespace create #{new_resource.name} #{new_resource.options[:location]}"		
+		cmd = "azure sb namespace create #{new_resource.name} \"#{new_resource.options[:location]}\""		
 		bash = %x[ #{cmd} ]
       end
 
