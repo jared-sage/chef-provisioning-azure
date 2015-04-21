@@ -11,7 +11,7 @@ class Chef
 
       action :destroy do
         Chef::Log.info("Destroying AzureServiceBus: #{new_resource.name}")
-        cmd = "azure sb namespace delete #{new_resource.name}"		
+        cmd = "yes|azure sb namespace delete #{new_resource.name}"		
 		bash = %x[ #{cmd} ]
       end
     end
