@@ -13,7 +13,7 @@ class Chef
 		csql.list_servers.each do | m |
            name = m.name
 	       csql.list_sql_server_firewall_rules("#{name}").each do | n |
-		      if y[:rule] == new_resource.name
+		      if n[:rule] == new_resource.name
 			     Azure.config.management_endpoint = restore
 			     fail "SQL server already exists in this subscription."
 			  end
