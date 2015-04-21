@@ -9,10 +9,29 @@ class Chef
         Chef::Log.info("Creating AzureSqlServer: #{new_resource.name}")
         csql = Azure::SqlDatabaseManagementService.new
         Chef::Log.info("#{new_resource.options.inspect}")
+		# hack!
+		csql.list_servers.each do | m |
+           name = m.name
+	       csql.list_sql_server_firewall_rules("#{name}").each do | n |
+		      if y[:rule] == new_resource.name
+			     Azure.config.management_endpoint = restore
+			     fail "SQL server already exists in this subscription."
+			  end
+		   end
+		end
+		
         properties = csql.create_server("#{new_resource.options[:login]}", \
                                         "#{new_resource.options[:password]}", \
                                         "#{new_resource.options[:location]}")
         server = properties.name
+		
+		# Create a dummy range for our hack rule
+		range = {
+		   :start_ip_address => "192.168.1.2",
+		   :end_ip_address => "192.168.1.2"
+		}
+		# Add the hack rule
+		csql.set_sql_server_firewall_rule(server, new_resource.name, range)
 
         new_resource.options[:firewall_rules].each do | rule |
           rule_name = URI::encode(rule[:name])
@@ -28,8 +47,12 @@ class Chef
       end
 
       action :destroy do
-        # not supported
-        fail "Destroy not yet implemented on Azure SQL Server using ASM."
+        restore = Azure.config.management_endpoint
+        Azure.config.management_endpoint = azure_sql_management_endpoint
+        Chef::Log.info("Destroying AzureSQLServer: #{new_resource.name}")
+        csql = Azure::SqlDatabaseManagementService.new
+		csql.delete_server(new_resource.name)
+		Azure.config.management_endpoint = restore
       end
     end
   end
