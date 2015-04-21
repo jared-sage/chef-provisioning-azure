@@ -22,7 +22,7 @@ class Chef
 		   end
 		end
 		
-		unless sql_server_exists
+		if sql_server_exists == 0
 			properties = csql.create_server("#{new_resource.options[:login]}", \
 											"#{new_resource.options[:password]}", \
 											"#{new_resource.options[:location]}")
