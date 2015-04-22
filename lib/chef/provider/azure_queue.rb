@@ -8,7 +8,7 @@ class Chef
 		restore_key = Azure.config.sb_access_key
 		Azure.config.sb_namespace = new_resource.options[:sb_namespace]
 		Azure.config.sb_access_key =  new_resource.options[:access_key]		
-        Chef::Log.info("Creating AzureQueue: #{new_resource.name} in AzureServiceBus ${new_resource.options[:sb_namespace]}")		
+        Chef::Log.info("Creating AzureQueue: #{new_resource.name} in AzureServiceBus #{new_resource.options[:sb_namespace]}")		
         sbs = Azure::ServiceBusService.new
         sbs.create_queue(new_resource.name)		
 		Azure.config.sb_namespace = restore_namespace
@@ -20,7 +20,7 @@ class Chef
 		restore_key = Azure.config.sb_access_key
 		Azure.config.sb_namespace = new_resource.options[:sb_namespace]
 		Azure.config.sb_access_key =  new_resource.options[:access_key]	
-        Chef::Log.info("Destroying AzureQueue: #{new_resource.name} in AzureServiceBus ${new_resource.options[:sb_namespace]}")
+        Chef::Log.info("Destroying AzureQueue: #{new_resource.name} in AzureServiceBus #new_resource.options[:sb_namespace]}")
         sbs = Azure::ServiceBusService.new
         sbs.delete_queue(new_resource.name)
 		Azure.config.sb_namespace = restore_namespace
